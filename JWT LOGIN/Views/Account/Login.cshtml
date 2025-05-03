@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null; // Optional: Use your existing layout file if needed
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JWT Login</title>
+    <script>
+        // Function to check if a user is already logged in
+        async function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    // Optional: Validate token by calling a secure endpoint
+                    const response = await fetch('/Secure/Index', {
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        // Token is valid, redirect to a secure page
+                        window.location.href = '/Secure/Index';
+                    } else {
+                        // Invalid token, clear storage
+                        localStorage.removeItem('token');
+                    }
+                } catch (err) {
+                    console.error('Error validating token:', err);
+                    localStorage.removeItem('token');
+                }
+            }
+        }
+
+        // Function to handle login
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/Account/Login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                localStorage.setItem('token', result.token);
+                alert('Login successful!');
+                window.location.href = '/Secure/Index';
+            } else {
+                alert(result.message);
+            }
+        }
+
+        // Run login status check on page load
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+
+
+        async function accessSecure() {
+            const token = localStorage.getItem('token'); // Get the token from localStorage
+            if (!token) {
+                alert('Token not found. Please log in again.');
+                return;
+            }
+
+            const response = await fetch('/Secure/Index', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` } // Include the token here
+            });
+
+            if (response.ok) {
+                const data = await response.text();
+                alert(data); // Successfully retrieved secure data
+            } else {
+                alert('Access denied. Please log in again.');
+            }
+        }
+
+    </script>
+
+
+
+
+</head>
+<body>
+    <h1>JWT Authentication Example</h1>
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" /><br />
+    <input type="password" id="password" placeholder="Password" /><br />
+    <button onclick="login()">Login</button>
+</body>
+</html>
