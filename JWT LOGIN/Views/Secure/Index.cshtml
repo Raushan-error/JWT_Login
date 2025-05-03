@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Secure Index";
+}
+
+<h2>Welcome, @ViewBag.Username!</h2>
+<p>You are logged in.</p>
+
+<p>Role: @ViewBag.Role</p>
+<br />
+<p>District: @ViewBag.District </p>
+<br />
+
+<p>UserId:  @ViewBag.UserId</p>
+<br />
+
+<p>Mobile: @ViewBag.MobileNumber </p>
+
+<a href="@Url.Action("Logout", "Home")">Logout</a>

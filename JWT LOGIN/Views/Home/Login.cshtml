@@ -1,0 +1,23 @@
+﻿@model JWT_LOGIN.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.Username)
+    @Html.TextBoxFor(model => model.Username)
+
+   // @Html.LabelFor(model => model.Password)
+    @Html.PasswordFor(model => model.Password)
+
+    <button type="submit">Login</button>
+}
+
+@if (ViewBag.Message != null)
+{
+    <div style="color: red;">@ViewBag.Message</div> <!-- Display error message if login fails -->
+}
